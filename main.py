@@ -1,3 +1,6 @@
+import random
+
+
 def le_arquivo(arquivo):
     # Abre arquivo para leitura
     f = open(arquivo, "r")
@@ -16,16 +19,12 @@ def le_arquivo(arquivo):
 
 
 def tem_ciclo(arco_candidato, V, lista_arestas):
-    for v in V:
-        if v == arco_candidato[1]:
-            for e in lista_arestas:
-                if e[0] == v:
-                    if e[1] in V:
-                        return True
+    if arco_candidato[1] in V:
+        return True
     return False
 
 
-def resolve(no_inicial, lista_de_arcos, tamanho):
+def resolve(no_inicial, lista_de_arcos, n):
     lista_de_arcos.sort(key=lambda tup: tup[2], reverse=False)
 
     stop = False
@@ -33,25 +32,36 @@ def resolve(no_inicial, lista_de_arcos, tamanho):
 
     V = [no_inicial]
     aux = []
-    ultimo_adicionado = no_inicial
+    ultimos_adicionados = [no_inicial]
     while not stop:
         for e in lista_de_arcos:
-            if e[0] == ultimo_adicionado:
+            if e[0] in ultimos_adicionados:
                 aux.append(e)
 
         aux.sort(key=lambda tup: tup[2], reverse=False)
-
+        ultimos_adicionados = []
+        melhor_aresta_positiva = None
         for e in aux:
             if not tem_ciclo(e, V, lista_de_arcos):
-                solucao_final.append(e)
-                V.append(e[1])
-                aux.remove(e)
-                ultimo_adicionado = e[1]
-                break
+                if e[2] <= 0:
+                    solucao_final.append(e)
+                    V.append(e[1])
+                    aux.remove(e)
+                    ultimos_adicionados.append(e[1])
+                else:
+                    melhor_aresta_positiva = e
+                    break
 
-        if len(V) == tamanho:
-            stop = True
-
+        if not ultimos_adicionados:
+            delta = (n - len(V)) / n
+            r = random.uniform(0, 1)
+            if r < delta:
+                solucao_final.append(melhor_aresta_positiva)
+                V.append(melhor_aresta_positiva[1])
+                aux.remove(melhor_aresta_positiva)
+                ultimos_adicionados.append(melhor_aresta_positiva[1])
+            else:
+                stop = True
     return solucao_final
 
 
@@ -62,8 +72,7 @@ def calcula_funcao_objetivo(solucao):
 if __name__ == '__main__':
     # Lê o arquivo de teste
     cab, arcs = le_arquivo('./testes/DAGs/100_01_050_0.dag')
-    s = resolve(0, arcs, cab[1])
+    s = resolve(0, arcs, cab[0])
 
     print(s)
     print(calcula_funcao_objetivo(s))
-
