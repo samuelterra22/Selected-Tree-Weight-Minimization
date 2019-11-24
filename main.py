@@ -1,3 +1,4 @@
+import copy
 import random
 
 
@@ -16,12 +17,6 @@ def le_arquivo(arquivo):
 
     # Retorna o cabeçalho e a lista de arcos (u, v, w)
     return cabecalho, arcos[:len(arcos) - 1]
-
-
-def tem_ciclo(arco_candidato, V, lista_arestas):
-    if arco_candidato[1] in V:
-        return True
-    return False
 
 
 def resolve(no_inicial, lista_de_arcos, n):
@@ -75,10 +70,53 @@ def calcula_funcao_objetivo(solucao):
     return sum(x[2] for x in solucao)
 
 
+# def tem_ciclo_grafo_n_direcionado(arco_candidato, V, lista_arestas):
+#     if arco_candidato[1] in V:
+#         return True
+#     return False
+
+
+def tem_ciclo(arco_candidato, V, solucao):
+    aux_V = copy.deepcopy(V)
+    if arco_candidato[1] not in aux_V:
+        aux_V.append(arco_candidato[1])
+    arestas_arvore = copy.deepcopy(solucao)
+    arestas_arvore.append(arco_candidato)
+    for v in aux_V:
+        if tem_caminho_retorno(v, arestas_arvore):
+            print("Ciclo")
+            return True
+    return False
+
+
+def tem_caminho_retorno(v, solucao):
+    vertices_ja_visitados = []
+    pilha = [v]
+    while pilha:
+        vertice_atual = pilha.pop(0)
+        for aresta in solucao:
+            if vertice_atual == aresta[0]:
+                if aresta[1] not in vertices_ja_visitados:
+                    pilha.append(aresta[1])
+                if aresta[1] == v:
+                    return True
+        vertices_ja_visitados.append(vertice_atual)
+    return False
+
+
 if __name__ == '__main__':
     # Lê o arquivo de teste
-    cab, arcs = le_arquivo('./testes/DAGs/1000_01_025_0.dag')
+    cab, arcs = le_arquivo('./testes/DAGs/100_01_050_0.dag')
     s = resolve(0, arcs, cab[0])
 
     print(s)
     print(calcula_funcao_objetivo(s))
+
+    # V = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    # grafo = [
+    #     (0, 1, 0), (0, 2, 0), (0, 7, 0), (4, 5, 0), # (3, 5, 0),
+    #     (2, 4, 0), (5, 6, 0), (7, 6, 0), (7, 8, 0), (8, 6, 0),
+    #     (6, 9, 0), (8, 9, 0), (1, 3, 0), (4, 3, 0), (4, 8, 0),
+    #     (6, 1, 0)
+    # ]
+    # print(tem_ciclo(None, V, grafo))
