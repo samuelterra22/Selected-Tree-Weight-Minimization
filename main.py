@@ -35,34 +35,29 @@ def resolve(no_inicial, lista_de_arcos, n):
         aux.sort(key=lambda tup: tup[2], reverse=False)
         ultimos_adicionados = []
         arestas_para_remover = []
-        melhor_aresta_positiva = None
         for e in aux:
             if not tem_ciclo(e, V, solucao_final):
                 if e[2] <= 0:
                     solucao_final.append(e)
                     arestas_para_remover.append(e)
-                    print(len(V), len(aux))
                     if e[1] not in V:
                         V.append(e[1])
                         ultimos_adicionados.append(e[1])
                 else:
-                    melhor_aresta_positiva = e
+                    delta = (n - len(V)) / n
+                    r = random.uniform(0, 1)
+                    if r < delta:
+                        solucao_final.append(e)
+                        if e[1] not in V:
+                            V.append(e[1])
+                            ultimos_adicionados.append(e[1])
+                        arestas_para_remover.append(e)
                     break
         for aresta in arestas_para_remover:
             aux.remove(aresta)
+            lista_de_arcos.remove(aresta)
         if not ultimos_adicionados:
-            delta = (n - len(V)) / n
-            r = random.uniform(0, 1)
-            if r < delta and melhor_aresta_positiva is not None:
-                if melhor_aresta_positiva not in solucao_final:
-                    solucao_final.append(melhor_aresta_positiva)
-                solucao_final.append(melhor_aresta_positiva)
-                if melhor_aresta_positiva[1] not in V:
-                    V.append(melhor_aresta_positiva[1])
-                    ultimos_adicionados.append(melhor_aresta_positiva[1])
-                aux.remove(melhor_aresta_positiva)
-            else:
-                stop = True
+            stop = True
     return solucao_final
 
 
@@ -70,21 +65,21 @@ def calcula_funcao_objetivo(solucao):
     return sum(x[2] for x in solucao)
 
 
-# def tem_ciclo_grafo_n_direcionado(arco_candidato, V, lista_arestas):
-#     if arco_candidato[1] in V:
-#         return True
-#     return False
+def tem_ciclo_grafo_V2(arco_candidato, V):
+    if arco_candidato[1] in V:
+        return True
+    return False
 
 
 def tem_ciclo(arco_candidato, V, solucao):
+    if arco_candidato[0] not in V:
+        return False
     aux_V = copy.deepcopy(V)
-    if arco_candidato[1] not in aux_V:
-        aux_V.append(arco_candidato[1])
+    aux_V.append(arco_candidato[1])
     arestas_arvore = copy.deepcopy(solucao)
     arestas_arvore.append(arco_candidato)
     for v in aux_V:
         if tem_caminho_retorno(v, arestas_arvore):
-            print("Ciclo")
             return True
     return False
 
