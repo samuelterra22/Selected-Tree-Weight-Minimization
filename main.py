@@ -7,12 +7,21 @@ Ideia principal do algoritmo:
 O algoritmo inicialmente realiza leitura do arquivo de acordo com a instância
 informada, retornando o cabeçalho com as configurações de entrada. 
 
-Em seguida, com a função "resolve", 
+Em seguida, com a função "resolve" que constrói a árvore direcionada T a partir
+do primeiro vértice com os dados carregados do arquivo de entrada. Os dados são
+ordenados de forma decrescente, isso porque o objetivo do trabalho é realizar a
+minimização do peso total dos arcos da árvore selecionada. Na função "resolve",
+se o arco tem um peso negativo ou zero, ele entra para a lista de arcos que 
+compõe a solução final e se verifica se o seu vértice de destino ainda não 
+visitado, se o mesmo não foi explorado, é adicionado na lista de arcos a se 
+visitar. Caso o arco tenha um peso positivo, é calculado um valor de delta 
+relacionado ao tamanho da lista de vertices e gerado também um número aleatório
+de zero a 1, se o número gerado for menor que o delta calculado o arco é 
+adicionado à lista de arcos da solução final O método "resolve" termina quando
+não é mais possível adicionar mais arcos à árvore. 
 
-
-O método "resolve" termina quando a lista de tarefas estiver vazia. 
-
-Por fim, é calculado a função objetivo somando o peso de todos os arcos da árvore resultante.
+Por fim, é calculado a função objetivo somando o peso de todos os arcos da 
+árvore resultante.
 """
 
 
