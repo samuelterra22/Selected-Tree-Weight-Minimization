@@ -102,7 +102,7 @@ def tem_ciclo_grafo_V2(arco_candidato, V):
                             estiver contido na lista de vértices.
     """
 
-    # Verifica se o vértice de destino está contino na lista de vértices.
+    # Verifica se o vértice de destino está contido na lista de vértices.
     if arco_candidato[1] in V:
         return True
     return False
@@ -119,7 +119,7 @@ def tem_ciclo(arco_candidato, V, solucao):
     """
 
     # Verifica se o vértice de origem do arco candidato nao está contido em V
-    if arco_candidato[0] not in V:
+    if arco_candidato[1] not in V:
         return False
 
     # Copia o vetor de vértices V para um vetor auxiliar
