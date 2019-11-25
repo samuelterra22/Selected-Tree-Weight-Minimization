@@ -185,7 +185,7 @@ def tem_caminho_retorno(v, solucao):
 
 if __name__ == '__main__':
     # Lê o arquivo da instancia
-    cab, arcos = le_arquivo('./testes/DAGs/100_01_050_0.dag')
+    cab, arcos = le_arquivo('./instances/DAGs/100_01_050_0.dag')
 
     # Constroe a árvore direcionada T a partir do primeiro vértice com os
     # dados do arquivo de entrada
